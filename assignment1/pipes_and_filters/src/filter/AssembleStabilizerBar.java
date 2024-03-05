@@ -2,7 +2,7 @@ package filter;
 
 import chair.Chair;
 
-public class AssembleStabilizerBar implements Filter<Chair, Chair> {
+public class AssembleStabilizerBar implements Filter<Chair> {
     @Override
     public Chair process(Chair chair) {
         if(!chair.isAssembleFeet()) {

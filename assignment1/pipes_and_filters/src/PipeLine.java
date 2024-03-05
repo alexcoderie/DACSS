@@ -1,17 +1,17 @@
 import filter.Filter;
 
-public class PipeLine<INPUT, OUTPUT> {
-    private final Filter<INPUT, OUTPUT> currentFilter;
+public class PipeLine<DATA> {
+    private final Filter<DATA> currentFilter;
 
-    public PipeLine(Filter<INPUT, OUTPUT> currentFilter) {
+    public PipeLine(Filter<DATA> currentFilter) {
         this.currentFilter = currentFilter;
     }
 
-    <K> PipeLine<INPUT, K> addFilter(Filter<OUTPUT, K> newFilter) {
+    PipeLine<DATA> addFilter(Filter<DATA> newFilter) {
         return new PipeLine<>(input -> newFilter.process(currentFilter.process(input)));
     }
 
-    OUTPUT execute(INPUT input) {
+    DATA execute(DATA input) {
         return currentFilter.process(input);
     }
 }

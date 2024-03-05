@@ -2,7 +2,7 @@ package filter;
 
 import chair.Chair;
 
-public class AssembleFeet implements Filter<Chair, Chair>{
+public class AssembleFeet implements Filter<Chair>{
     @Override
     public Chair process(Chair chair) {
         if(!chair.isCutSeat()) {

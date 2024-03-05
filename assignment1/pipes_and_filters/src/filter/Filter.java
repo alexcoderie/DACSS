@@ -1,5 +1,5 @@
 package filter;
 
-public interface Filter<INPUT, OUTPUT> {
-    OUTPUT process(INPUT input);
+public interface Filter<DATA> {
+    DATA process(DATA input);
 }
