@@ -1,11 +1,16 @@
 package filter;
 
-public class AssembleStabilizerBar implements Filter<Integer, Integer> {
+import chair.Chair;
+
+public class AssembleStabilizerBar implements Filter<Chair, Chair> {
     @Override
-    public Integer process(Integer value) {
-        if(value != 2 || value != 3) {
+    public Chair process(Chair chair) {
+        if(!chair.isAssembleFeet()) {
             throw new IllegalArgumentException("Incorrect order: Assembling the stabilizer bar should be dome after the feet were assembled");
         }
-        return 4;
+
+        chair.assembleStabilizer();
+        System.out.println("Stabilizer bar was assembled");
+        return chair;
     }
 }

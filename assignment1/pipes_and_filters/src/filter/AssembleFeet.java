@@ -1,11 +1,15 @@
 package filter;
 
-public class AssembleFeet implements Filter<Integer, Integer>{
+import chair.Chair;
+
+public class AssembleFeet implements Filter<Chair, Chair>{
     @Override
-    public Integer process(Integer value) {
-        if(value != 1 || value != 3) {
+    public Chair process(Chair chair) {
+        if(!chair.isCutSeat()) {
             throw new IllegalArgumentException("Incorrect order: Assembling the feet should be dome after the seat was cut");
         }
-        return 2;
+        chair.assembleFeet();
+        System.out.println("Feet were assembled");
+        return chair;
     }
 }
