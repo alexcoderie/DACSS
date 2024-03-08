@@ -1,18 +1,22 @@
-import chair.Chair;
+import pipeline.PipeLine;
+import product.Chair;
 import filter.*;
+import pipeline.ChairPipeLine;
 
 public class Main {
     // TO-DO
-    // change filter to take only one generic type
     // make the checking of the order be done by a pipeline manager
     public static void main(String[] args) {
         Chair chair = new Chair();
-        var filters = new PipeLine<>(new CutSeat())
-                .addFilter(new AssembleFeet())
-                .addFilter(new AssembleStabilizerBar())
-                .addFilter(new AssembleBackrest())
-                .addFilter(new PackageChair());
+        PipeLine chairPipeLine = new ChairPipeLine();
 
-        filters.execute(chair);
+        chairPipeLine.addFilter(new CutSeat());
+        chairPipeLine.addFilter(new AssembleFeet());
+        chairPipeLine.addFilter(new AssembleBackrest());
+        chairPipeLine.addFilter(new AssembleStabilizerBar());
+        chairPipeLine.addFilter(new PackageChair());
+
+        chairPipeLine.execute(chair);
+
     }
 }
