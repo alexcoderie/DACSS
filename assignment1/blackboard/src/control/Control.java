@@ -18,9 +18,11 @@ public class Control {
     }
 
     public void activateKnowledgeSource(ChairBlackboard chairBlackboard) {
-        for(KnowledgeSource ks : knowledgeSourceList) {
-            if(ks.execCondition(chairBlackboard))
-                ks.execAction(chairBlackboard);
+        while(!chairBlackboard.isPackageChair()) {
+            for(KnowledgeSource ks : knowledgeSourceList) {
+                if(ks.execCondition(chairBlackboard))
+                    ks.execAction(chairBlackboard);
+            }
         }
     }
 }

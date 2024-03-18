@@ -15,23 +15,34 @@ public class ChairPipeLine implements PipeLine<Chair> {
 
     @Override
     public void addFilter(Filter<Chair> newFilter) {
+        if (newFilter instanceof CutSeat && pipeline.stream().anyMatch(f -> f instanceof CutSeat)) {
+            throw new IllegalArgumentException("CutSeat filter already exists in the pipeline");
+        }
+        if (newFilter instanceof AssembleFeet && !pipeline.stream().anyMatch(f -> f instanceof CutSeat)) {
+            throw new IllegalArgumentException("Seat needs to be cut before adding AssembleFeet filter");
+        }
+        if (newFilter instanceof AssembleBackrest && !pipeline.stream().anyMatch(f -> f instanceof CutSeat)) {
+            throw new IllegalArgumentException("Seat needs to be cut before adding AssembleBackrest filter");
+        }
+        if (newFilter instanceof AssembleStabilizerBar && !pipeline.stream().anyMatch(f -> f instanceof AssembleFeet)) {
+            throw new IllegalArgumentException("Feet need to be assembled before adding AssembleStabilizerBar filter");
+        }
+        if (newFilter instanceof PackageChair) {
+            if (pipeline.size() != pipeline.stream().filter(f -> !(f instanceof PackageChair)).count()) {
+                throw new IllegalArgumentException("Packaging filter can only be added after all other filters are added");
+            }
+        } else {
+            if (pipeline.stream().anyMatch(f -> f instanceof PackageChair)) {
+                throw new IllegalArgumentException("Packaging filter should be added last");
+            }
+        }
+
         pipeline.add(newFilter);
     }
 
     @Override
     public void execute(Chair chair) {
         for(Filter f : pipeline) {
-            if(chair.isCutSeat() && f instanceof CutSeat) {
-               throw new IllegalArgumentException("Chair is already cut!");
-            } else if(!chair.isCutSeat() && f instanceof AssembleFeet) {
-                throw new IllegalArgumentException("Seat needs to be cut before assembling the feet");
-            } else if(!chair.isCutSeat() && f instanceof AssembleBackrest) {
-                throw new IllegalArgumentException("Seat needs to be cut before assembling the backrest");
-            } else if(!chair.isAssembleFeet() && f instanceof AssembleStabilizerBar) {
-                throw new IllegalArgumentException("Feet need to be assembled before assembling the stabilizer bar");
-            } else if(!f.equals(pipeline.get(pipeline.size() - 1)) && f instanceof PackageChair) {
-                throw new IllegalArgumentException("Packaging needs to be the last operation");
-            }
             f.process(chair);
         }
     }

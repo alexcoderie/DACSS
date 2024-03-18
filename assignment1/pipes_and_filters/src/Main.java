@@ -11,9 +11,9 @@ public class Main {
         PipeLine chairPipeLine = new ChairPipeLine();
 
         chairPipeLine.addFilter(new CutSeat());
+        chairPipeLine.addFilter(new AssembleStabilizerBar());
         chairPipeLine.addFilter(new AssembleFeet());
         chairPipeLine.addFilter(new AssembleBackrest());
-        chairPipeLine.addFilter(new AssembleStabilizerBar());
         chairPipeLine.addFilter(new PackageChair());
 
         chairPipeLine.execute(chair);

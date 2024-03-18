@@ -8,10 +8,10 @@ public class Main {
         Control control = new Control();
 
         control.addKnowledgeSource(new CutSeat());
-        control.addKnowledgeSource(new AssembleFeet());
-        control.addKnowledgeSource(new AssembleFeet());
-        control.addKnowledgeSource(new AssembleBackrest());
         control.addKnowledgeSource(new AssembleStabilizerBar());
+        control.addKnowledgeSource(new AssembleBackrest());
+        control.addKnowledgeSource(new AssembleFeet());
+        control.addKnowledgeSource(new AssembleFeet());
         control.addKnowledgeSource(new PackageChair());
 
         control.activateKnowledgeSource(chairBlackboard);

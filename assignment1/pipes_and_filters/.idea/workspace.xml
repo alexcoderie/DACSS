@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb0547e3-a20a-4476-9126-7b3846bfa7bf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../blackboard/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/../blackboard/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pipeline/ChairPipeLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipeline/ChairPipeLine.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +15,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2dUaKr9mtNk3HQbWpoHf78IbaJA" />
   <component name="ProjectViewState">
@@ -46,7 +47,10 @@
       <option name="presentableId" value="Default" />
       <updated>1710065053170</updated>
       <workItem from="1710065054317" duration="107000" />
-      <workItem from="1710068674967" duration="2125000" />
+      <workItem from="1710068674967" duration="2712000" />
+      <workItem from="1710179725743" duration="51000" />
+      <workItem from="1710230912511" duration="2547000" />
+      <workItem from="1710701617781" duration="2343000" />
     </task>
     <servers />
   </component>
