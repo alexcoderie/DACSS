@@ -12,19 +12,19 @@ import furniturefactory.filters.FeetAssembledFilter;
 
 public class AssembleStabilizerFeet implements Subscriber {
     public AssembleStabilizerFeet() {
-        EventService.instance().subscribe(DoneAssembleFeet.class, null, this);
-        EventService.instance().subscribe(DoneAssembleBackrest.class, new FeetAssembledFilter(), this);
+        EventService.instance().subscribe(this, "onAssembleBackrest", null);
     }
 
+    public void onAssembleFeet(DoneAssembleFeet event) {
+        Chair chair = event.chairInProgress;
+        triggerPublication(new DoneAssembleStabilizer(chair));
+    }
+    public void onAssembleBackrest(DoneAssembleBackrest event) {
+        Chair chair = event.chairInProgress;
+        triggerPublication(new DoneAssembleStabilizer(chair));
+    }
     public static void triggerPublication(Event event) {
         EventService.instance().publish(event);
     }
 
-    @Override
-    public void inform(Event event) {
-       if(event instanceof DoneAssembleBackrest) {
-           Chair chair = ((DoneAssembleBackrest) event).chairInProgress;
-           triggerPublication(new DoneAssembleStabilizer(chair));
-       }
-    }
 }

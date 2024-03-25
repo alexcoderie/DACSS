@@ -13,15 +13,11 @@ public class CutSeat implements Subscriber {
     }
 
     public CutSeat() {
-        EventService.instance().subscribe(DoneInitChair.class, null, this);
+        EventService.instance().subscribe(this, "onInitChair", null);
     }
 
-    @Override
-    public void inform(Event event) {
-        if(event instanceof DoneInitChair) {
-            Chair chair = ((DoneInitChair) event).chairInProgress;
-            DoneCutSeat doneCutSeat = new DoneCutSeat(chair);
-            triggerPublication(doneCutSeat);
-        }
+    public void onInitChair(DoneInitChair event) {
+        Chair chair = event.chairInProgress;
+        triggerPublication(new DoneCutSeat(chair));
     }
 }

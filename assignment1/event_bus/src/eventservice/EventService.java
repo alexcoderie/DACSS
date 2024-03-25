@@ -1,5 +1,7 @@
 package eventservice;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +28,59 @@ public class EventService {
         for (Subscription subscription : subscriptions) {
             if (subscription.eventType.isAssignableFrom(event.getClass())
                     && (subscription.filter == null || subscription.filter.apply(event)))
-                subscription.subscriber.inform(event);
+                invokeHandlerMethod(subscription.subscriber, event, subscription.eventType);
         }
     }
 
-    public void subscribe(Class<?> eventType, Filter filter, Subscriber subscriber)
-            throws InvalidEventTypeException {
-        if (!eventClass.isAssignableFrom(eventType))
-            throw new InvalidEventTypeException();
+    public void invokeHandlerMethod(Subscriber subscriber, Event event, Class<?> eventType) {
+        Class<?> subscriberClass = subscriber.getClass();
 
-        // Prevent duplicate subscriptions
+        Method[] methods = subscriberClass.getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(eventType)) {
+                try {
+                    // Invoke the handler method
+                    method.invoke(subscriber, event);
+                    return; // Only invoke the first matching handler method
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    // Handle reflection exceptions
+                    e.printStackTrace(); // or log it
+                }
+            }
+        }
+    }
+
+    public void subscribe(Subscriber subscriber, String handlerName, Filter filter)
+            throws InvalidEventTypeException {
+        Class<?> subscriberClass = subscriber.getClass();
+
+        Method[] methods = subscriberClass.getMethods();
+        Method handlerMethod = null;
+
+        for (Method method : methods) {
+            if (method.getName().equals(handlerName) && method.getParameterCount() == 1) {
+                handlerMethod = method;
+                break;
+            }
+        }
+
+        if (handlerMethod == null) {
+            throw new InvalidEventTypeException();
+        }
+
+        if (handlerMethod.getParameterCount() != 1) {
+            throw new InvalidEventTypeException();
+        }
+
+        Class<?> eventType = handlerMethod.getParameterTypes()[0];
+
+        if(!eventClass.isAssignableFrom(eventType)) {
+            throw new InvalidEventTypeException();
+        }
         Subscription subscription = new Subscription(eventType, filter, subscriber);
-        if (!subscriptions.contains(subscription))
+        if(!subscriptions.contains(subscription)) {
             subscriptions.add(subscription);
+        }
     }
 
     public void unsubscribe(Class<?> eventType, Filter filter, Subscriber subscriber)
