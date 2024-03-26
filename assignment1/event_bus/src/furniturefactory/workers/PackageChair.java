@@ -12,7 +12,8 @@ import furniturefactory.filters.StabilizerAssembledFilter;
 
 public class PackageChair implements Subscriber {
     public PackageChair() {
-        EventService.instance().subscribe(this, "onAssembleStabilizer", new BackrestAssembledFilter());
+        EventService.instance().subscribe(this, "onAssembleStabilizer", new BackrestAssembledFilter(), "filterAssembleStabilizer");
+        EventService.instance().subscribe(this, "onAssembleBackrest", new StabilizerAssembledFilter(), "filterAssembleBackrest");
     }
 
     public void onAssembleBackrest(DoneAssembleBackrest event) {

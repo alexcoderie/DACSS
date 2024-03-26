@@ -6,14 +6,14 @@ import furniturefactory.Chair;
 import furniturefactory.events.DoneAssembleBackrest;
 
 public class StabilizerAssembledFilter implements Filter {
-    @Override
-    public boolean apply(Event event) {
-        if(event instanceof DoneAssembleBackrest) {
-            Chair chair = ((DoneAssembleBackrest) event).chairInProgress;
-            if(chair.isAssembleStabilizer()) {
-                return true;
-            }
+    private static int counter = 0;
+    public boolean filterAssembleBackrest(DoneAssembleBackrest event) {
+        Chair chair =  event.chairInProgress;
+        if(chair.isAssembleStabilizer() && counter == 0) {
+            counter++;
+            return true;
         }
+
         return false;
     }
 }

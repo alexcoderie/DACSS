@@ -13,7 +13,8 @@ import furniturefactory.filters.CutSeatFilter;
 
 public class AssembleFeet implements Subscriber {
     public AssembleFeet() {
-        EventService.instance().subscribe(this, "onDoneCutSeat", null);
+        EventService.instance().subscribe(this, "onDoneCutSeat", null, null);
+        EventService.instance().subscribe(this, "onAssembleBackrest", new CutSeatFilter(), "filterAssembleBackrest");
     }
 
     public void onDoneCutSeat(DoneCutSeat event) {
@@ -25,6 +26,7 @@ public class AssembleFeet implements Subscriber {
         Chair chair = event.chairInProgress;
         triggerPublication(new DoneAssembleFeet(chair));
     }
+
     public static void triggerPublication(Event event) {
         EventService.instance().publish(event);
     }

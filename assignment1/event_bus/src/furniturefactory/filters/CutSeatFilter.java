@@ -8,20 +8,23 @@ import furniturefactory.events.DoneAssembleBackrest;
 import furniturefactory.events.DoneAssembleFeet;
 
 public class CutSeatFilter implements Filter {
-    @Override
-    public boolean apply(Event event) {
-        if(event instanceof DoneAssembleBackrest) {
-            Chair chair = ((DoneAssembleBackrest) event).chairInProgress;
-            if(chair.isCutSeat()) {
-                return true;
-            }
+    private static int counter = 0;
+    public boolean filterAssembleBackrest(DoneAssembleBackrest event) {
+        Chair chair =  event.chairInProgress;
+        if(chair.isCutSeat() && counter == 0) {
+            counter++;
+            return true;
         }
-        if(event instanceof DoneAssembleFeet) {
-            Chair chair = ((DoneAssembleFeet) event).chairInProgress;
-            if(chair.isCutSeat()) {
-                return true;
-            }
+        return false;
+    }
+
+    public boolean filterAssembleFeet(DoneAssembleFeet event) {
+        Chair chair =  event.chairInProgress;
+        if(chair.isCutSeat() && counter == 0) {
+            counter++;
+            return true;
         }
+
         return false;
     }
 }

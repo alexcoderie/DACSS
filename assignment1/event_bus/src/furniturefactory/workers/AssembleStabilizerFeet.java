@@ -12,7 +12,8 @@ import furniturefactory.filters.FeetAssembledFilter;
 
 public class AssembleStabilizerFeet implements Subscriber {
     public AssembleStabilizerFeet() {
-        EventService.instance().subscribe(this, "onAssembleBackrest", null);
+        EventService.instance().subscribe(this, "onAssembleFeet", null, null);
+        EventService.instance().subscribe(this, "onAssembleBackrest", new FeetAssembledFilter(), "filterAssembleBackrest");
     }
 
     public void onAssembleFeet(DoneAssembleFeet event) {

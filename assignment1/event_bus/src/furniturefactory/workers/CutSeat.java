@@ -13,7 +13,7 @@ public class CutSeat implements Subscriber {
     }
 
     public CutSeat() {
-        EventService.instance().subscribe(this, "onInitChair", null);
+        EventService.instance().subscribe(this, "onInitChair", null, null);
     }
 
     public void onInitChair(DoneInitChair event) {

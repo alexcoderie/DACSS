@@ -10,10 +10,10 @@ public class Main {
     private static PackageChair packageChair;
     public static void main(String[] args) {
         cutSeat = new CutSeat();
-//        assembleFeet = new AssembleFeet();
-//        assembleBackrest = new AssembleBackrest();
-//        assembleStabilizerFeet = new AssembleStabilizerFeet();
-//        packageChair = new PackageChair();
+        assembleFeet = new AssembleFeet();
+        assembleBackrest = new AssembleBackrest();
+        assembleStabilizerFeet = new AssembleStabilizerFeet();
+        packageChair = new PackageChair();
 
         EventService.instance().publish(new DoneInitChair());
     }
