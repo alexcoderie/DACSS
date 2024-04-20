@@ -2,12 +2,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-public class ProductType {
+public class EntityType {
     private String name;
     private Map<String, PropertyType> allowedProperties;
     private Function<Map<String, Property>, Integer> priceRule;
 
-    public ProductType(String name) {
+    public EntityType(String name) {
         this.name = name;
         this.allowedProperties = new HashMap<>();
     }

@@ -1,17 +1,17 @@
 import java.util.HashMap;
 import java.util.Map;
 
-public class Product {
-    private ProductType productType;
+public class Entity {
+    private EntityType entityType;
     private Map<String, Property> properties;
 
-    public Product(ProductType productType) {
-        this.productType = productType;
+    public Entity(EntityType entityType) {
+        this.entityType = entityType;
         properties = new HashMap<>();
     }
 
     public void setProperty(String name, Object value) {
-        PropertyType propertyType = productType.getPropertyType(name);
+        PropertyType propertyType = entityType.getPropertyType(name);
 
         if(propertyType != null) {
             if(propertyType.getType().isInstance(value)) {
@@ -20,13 +20,13 @@ public class Product {
                 throw new IllegalArgumentException("Invalid value " + value + " from property " + name);
             }
         } else {
-            throw new IllegalArgumentException("Property " + name + " is not allowed for product " + productType.getName());
+            throw new IllegalArgumentException("Property " + name + " is not allowed for product " + entityType.getName());
         }
     }
 
     public double calculatePrice() {
-        if(productType.getPriceRule() != null) {
-            return productType.getPriceRule().apply(properties);
+        if(entityType.getPriceRule() != null) {
+            return entityType.getPriceRule().apply(properties);
         } else {
             throw new IllegalStateException("No price rule defined for this product type");
         }

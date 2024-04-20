@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        ProductType carInsurance = new ProductType("Car Insurance");
+        EntityType carInsurance = new EntityType("Car Insurance");
         PropertyType brand = new PropertyType("brand", String.class);
         PropertyType age = new PropertyType("age", Integer.class);
         PropertyType enginePower = new PropertyType("enginePower", Integer.class);
@@ -13,7 +13,7 @@ public class Main {
                 1000 * ((String) props.get("brand").getValue()).length() - 10 * (Integer) props.get("age").getValue() + 5 * (Integer) props.get("enginePower").getValue()
         );
 
-        Product mCarInsurance = new Product(carInsurance);
+        Entity mCarInsurance = new Entity(carInsurance);
         mCarInsurance.setProperty("brand", "Toyota");
         mCarInsurance.setProperty("age", 10);
         mCarInsurance.setProperty("enginePower", 150);

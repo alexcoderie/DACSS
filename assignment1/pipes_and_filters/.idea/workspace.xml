@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb0547e3-a20a-4476-9126-7b3846bfa7bf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pipeline/ChairPipeLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pipeline/ChairPipeLine.java" afterDir="false" />
-    </list>
+    <list default="true" id="bb0547e3-a20a-4476-9126-7b3846bfa7bf" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,7 +26,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "D:/info/Anul 3/Semestrul 2/DACSS/assignment1/pipes_and_filters",
+    "last_opened_file_path": "D:/info/Anul 3/Semestrul 2/DACSS/dynamic_object_model",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -51,6 +48,7 @@
       <workItem from="1710179725743" duration="51000" />
       <workItem from="1710230912511" duration="2547000" />
       <workItem from="1710701617781" duration="2343000" />
+      <workItem from="1712041811131" duration="98000" />
     </task>
     <servers />
   </component>
