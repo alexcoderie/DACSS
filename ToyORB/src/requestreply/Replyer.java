@@ -15,11 +15,11 @@ public class Replyer {
 
     public Replyer(String theName, Address theAddr) {
         myName = theName;
-        myAddr=theAddr;
+        myAddr = theAddr;
 
         try {
             srvS = new ServerSocket(myAddr.port(), 1000);
-            System.out.println("Replyer Serversocket:"+srvS);
+            System.out.println("Replyer Serversocket:" + srvS);
         } catch (Exception e) {
             System.out.println("Error opening server socket");
         }
@@ -31,7 +31,7 @@ public class Replyer {
         try
         {
             s = srvS.accept();
-            System.out.println("Replyer accept: Socket"+s);
+            System.out.println("Replyer accept: Socket" + s);
             iStr = s.getInputStream();
             val = iStr.read();
             buffer = new byte[val];
