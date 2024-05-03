@@ -7,12 +7,13 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[]args) {
-        new Configuration();
-
-        Address dest = Registry.instance().get("Server");
+        Address dispatcherAddress = new Entry("127.0.0.1", 9999);
         Requestor r = new Requestor("Client");
         Marshaller m = new Marshaller();
         Scanner scanner = new Scanner(System.in);
+
+        Address serverAddress = lookupServer(dispatcherAddress, r, m);
+        System.out.println(serverAddress.dest() + " " + serverAddress.port());
 
         while(true) {
             System.out.println("Choose an operation: ");
@@ -48,14 +49,33 @@ public class Client {
 
             String userInput = operation.concat(":").concat(parameter);
 
-            Message msg= new Message("Client", userInput);
+            Message msg = new Message("Client", userInput);
             byte[] bytes = m.marshal(msg);
-            bytes = r.deliver_and_wait_feedback(dest, bytes);
+            bytes = r.deliver_and_wait_feedback(serverAddress, bytes);
             Message answer = m.unmarshal(bytes);
 
             System.out.println("Client received message " + answer.data + " from " + answer.sender);
         }
 
         scanner.close();
+    }
+
+    //TO-DO IMPLEMENT LOGIC FOR LOOKING UP THE SERVER
+    private static Address lookupServer(Address dispatcherAddress, Requestor r, Marshaller m) {
+
+        String lookupRequest = "LOOKUP:Server";
+        Message request = new Message("Client", lookupRequest);
+        byte[] requestBytes = m.marshal(request);
+        requestBytes = r.deliver_and_wait_feedback(dispatcherAddress, requestBytes);
+        Message requestAnswer = m.unmarshal(requestBytes);
+
+        System.out.println("Received message: " + requestAnswer.data + " from " + requestAnswer.sender);
+
+        String[] parts = requestAnswer.data.split(":");
+        String serverIP = parts[0];
+        int port = Integer.parseInt(parts[1]);
+        Address serverAddress = new Entry(serverIP, port);
+
+        return serverAddress;
     }
 }

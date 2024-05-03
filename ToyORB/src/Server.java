@@ -1,4 +1,3 @@
-import bytesendreceive.ByteReceiver;
 import bytesendreceive.ByteSender;
 import requestreply.*;
 import messagemarshaller.*;
@@ -57,37 +56,28 @@ class MessageServer {
 
 public class Server {
     public static void main(String args[]) {
-//        new Configuration();
-
         Address dispatcherAddress = new Entry("127.0.0.1", 9999);
+        Address myAddr = new Entry("127.0.0.1", 1111);
         registerServer(dispatcherAddress);
 
         ByteStreamTransformer transformer = new ServerTransformer(new MessageServer());
-//        Address myAddr = Registry.instance().get("Server");
-//        Replyer r = new Replyer("Server", myAddr);
+        Replyer r = new Replyer("Server", myAddr);
 
-//        while (true) {
-//            r.receive_transform_and_send_feedback(transformer);
-//        }
+        while (true) {
+            r.receive_transform_and_send_feedback(transformer);
+        }
     }
 
     private static void registerServer(Address dispatcherAddress) {
-        ByteSender bs = new ByteSender("Server");
+        Requestor requestor = new Requestor("Server");
         Marshaller m = new Marshaller();
         String registerRequest = "REGISTER:Server:1111";
-
         Message request = new Message("Server", registerRequest);
         byte[] bytes = m.marshal(request);
-        bs.deliver(dispatcherAddress, bytes);
-    }
 
-    private static void lookupServer(Address dispatcherAddress) {
-        ByteSender bs = new ByteSender("Server");
-        Marshaller m = new Marshaller();
-        String registerRequest = "REGISTER:Server:1111";
+        bytes = requestor.deliver_and_wait_feedback(dispatcherAddress, bytes);
+        Message answer = m.unmarshal(bytes);
 
-        Message request = new Message("Server", registerRequest);
-        byte[] bytes = m.marshal(request);
-        bs.deliver(dispatcherAddress, bytes);
+        System.out.println("Received message: " + answer.data + " from " + answer.sender);
     }
 }

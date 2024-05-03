@@ -5,78 +5,69 @@ import messagemarshaller.Marshaller;
 import messagemarshaller.Message;
 import registry.Entry;
 import registry.Registry;
+import requestreply.ByteStreamTransformer;
+import requestreply.Replyer;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+class DispatcherTransformer implements ByteStreamTransformer
+{
+    private MessageDispatcher originalServer;
 
+    public DispatcherTransformer(MessageDispatcher s) {
+        originalServer = s;
+    }
+
+    public byte[] transform(byte[] in) {
+        Message msg;
+        Marshaller m = new Marshaller();
+        msg = m.unmarshal(in);
+
+        Message answer = originalServer.get_answer(msg);
+
+        byte[] bytes = m.marshal(answer);
+        return bytes;
+    }
+}
+
+class MessageDispatcher {
+    public Message get_answer(Message msg) {
+        System.out.println("Dispatcher received " + msg.data + " from " + msg.sender);
+
+        String[] parts = msg.data.split(":");
+        String command = parts[0];
+        String name = parts[1];
+
+        if(command.equals("REGISTER")) {
+            int port = Integer.parseInt(parts[2]);
+            register(name, port);
+            return new Message("Dispatcher", "You are registered");
+        } else if(command.equals("LOOKUP")) {
+            Address destination = Registry.instance().get(name);
+            String serverIP = destination.dest();
+            String serverPort = String.valueOf(destination.port());
+            String serverAddress = serverIP.concat(":").concat(serverPort);
+
+            return new Message("Dispatcher", serverAddress);
+        } else {
+            return new Message("Dispatcher", "Invalid operation");
+        }
+    }
+
+    private static void register(String name, int port) {
+        Registry.instance().put(name, new Entry("127.0.0.1", port));
+        System.out.println("Registered server " + name);
+    }
+}
 public class Dispatcher {
     public static final int PORT = 9999;
     public static void main(String[] args) {
-//            ServerSocket dispatcherSocket = new ServerSocket(PORT);
-        Registry.instance().put("Dispatcher", new Entry("127.0.0.1", PORT));
-        Address dispatcherAddress = Registry.instance().get("Dispatcher");
-        ByteReceiver br = new ByteReceiver("Dispatcher", dispatcherAddress);
-        ByteSender bs = new ByteSender("Dispatcher");
-        Marshaller m = new Marshaller();
+        Address dispatcherAddress = new Entry("127.0.0.1", PORT);
+        Replyer replyer = new Replyer("Dispatcher", dispatcherAddress);
+        ByteStreamTransformer transformer = new DispatcherTransformer(new MessageDispatcher());;
 
         System.out.println("Dispatcher started on port " + PORT);
 
         while(true) {
-//                Socket socket = dispatcherSocket.accept();
-            new Thread(new ClientHandler(dispatcherAddress, br, bs, m)).start();
-        }
-    }
-
-    private static class ClientHandler implements Runnable {
-//        private final Socket socket;
-//
-//
-//        ClientHandler(Socket socket) {
-//            this.socket = socket;
-//        }
-
-        private Address dispatcherAddress;
-        private ByteReceiver br;
-        private ByteSender bs;
-        private Marshaller m;
-        ClientHandler(Address dispatcherAddress, ByteReceiver br, ByteSender bs, Marshaller m) {
-            this.dispatcherAddress = dispatcherAddress;
-            this.br = br;
-            this.bs = bs;
-            this.m = m;
-        }
-
-        @Override
-        public void run() {
-            byte[] data = br.receive();
-            Message request = m.unmarshal(data);
-            System.out.println("Received request: " + request.data);
-
-            String[] parts = request.data.split(":");
-            String command = parts[0];
-
-            if(command.equals("REGISTER")) {
-                String name = parts[1];
-                int port = Integer.parseInt(parts[2]);
-                register(name, port);
-                System.out.println("Registered " + Registry.instance().get(name).dest() + " " + Registry.instance().get(name).port() );
-            } else if(command.equals("LOOKUP")) {
-                String name = parts[1];
-                Address destination = Registry.instance().get(name);
-                Message message = new Message("Dispatcher", destination.toString());
-
-                byte[] bytes = m.marshal(message);
-                Address sender = Registry.instance().get(request.sender);
-                bs.deliver(sender, bytes);
-            } else {
-                System.err.println("Invalid command");
-            }
-        }
-
-        private static void register(String name, int port) {
-            Registry.instance().put(name, new Entry("127.0.0.1", port));
-            System.out.println("Registered server " + name);
+            replyer.receive_transform_and_send_feedback(transformer);
         }
     }
 }
