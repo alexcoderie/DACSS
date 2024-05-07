@@ -1,10 +1,9 @@
-import bytesendreceive.ByteReceiver;
-import bytesendreceive.ByteSender;
 import commons.Address;
 import messagemarshaller.Marshaller;
 import messagemarshaller.Message;
 import registry.Entry;
 import registry.Registry;
+import registry.TypesRegistry;
 import requestreply.ByteStreamTransformer;
 import requestreply.Replyer;
 
@@ -38,13 +37,15 @@ class MessageDispatcher {
 
         if(command.equals("REGISTER")) {
             int port = Integer.parseInt(parts[2]);
-            register(name, port);
+            String objectType = parts[3];
+            register(name, port, objectType);
             return new Message("Dispatcher", "You are registered");
         } else if(command.equals("LOOKUP")) {
             Address destination = Registry.instance().get(name);
+            String objectType = TypesRegistry.instance().get(name);
             String serverIP = destination.dest();
             String serverPort = String.valueOf(destination.port());
-            String serverAddress = serverIP.concat(":").concat(serverPort);
+            String serverAddress = serverIP + ":" + serverPort + ":" + objectType;
 
             return new Message("Dispatcher", serverAddress);
         } else {
@@ -52,8 +53,9 @@ class MessageDispatcher {
         }
     }
 
-    private static void register(String name, int port) {
+    private static void register(String name, int port, String objectType) {
         Registry.instance().put(name, new Entry("127.0.0.1", port));
+        TypesRegistry.instance().put(name, objectType);
         System.out.println("Registered server " + name);
     }
 }
