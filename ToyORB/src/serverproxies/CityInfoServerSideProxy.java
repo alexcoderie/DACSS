@@ -1,33 +1,82 @@
 package serverproxies;
 
 import commons.Address;
-import infoapp.CityInfo;
-import infoapp.CityInfoImpl;
+import cityinfoapp.CityInfo;
+import cityinfoapp.CityInfoImpl;
 import messagemarshaller.Message;
 import registry.Entry;
 import requestreply.ByteStreamTransformer;
 import requestreply.Replyer;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+
 class CityInfoServer implements Server{
+    public CityInfo cityInfo;
+
+    public CityInfoServer() {
+        this.cityInfo = new CityInfoImpl();
+    }
+
     public Message get_answer(Message msg) {
         System.out.println("Server received " + msg.data + " from " + msg.sender);
-        CityInfo cityInfo = new CityInfoImpl();
 
         String[] parts = msg.data.split(":");
         String operation = parts[0];
-        String parameter = parts[1];
 
-        if(operation.equals("get_road_info")) {
-            int roadID = Integer.parseInt(parameter);
-            String roadInfo = cityInfo.getRoadInfo(roadID);
-            return new Message("CityInfoServer", roadInfo);
-        } else if(operation.equals("get_temp")) {
-            String city = parameter;
-            String temp = String.valueOf(cityInfo.getTemperature(city));
-            return new Message("CityInfoServer", temp);
-        } else {
-            return new Message("CityInfoServer", "Invalid operation");
+        try {
+            String methodName = operation;
+            Object[] parameters = new Object[parts.length - 1];
+
+            for(int i = 1; i < parts.length; i++) {
+                parameters[i-1] = parts[i];
+            }
+
+            Method[] methods = cityInfo.getClass().getMethods();
+            Method method = null;
+            for(Method m : methods) {
+                if(m.getName().equals(methodName) && m.getParameterCount() == parameters.length) {
+                    boolean match = true;
+                    Parameter[] methodParams = m.getParameters();
+                    for(int i = 0; i < parameters.length; i++) {
+                        Class<?> paramType = methodParams[i].getType();
+                        parameters[i] = convertToType(parameters[i].toString(), paramType);
+                        if(parameters[i] == null) {
+                            System.out.println("In second if");
+                            match = false;
+                            break;
+                        }
+                    }
+
+                    if(match) {
+                        method = m;
+                        break;
+                    }
+                }
+            }
+
+            if(method == null) {
+                throw new NoSuchMethodException("Method not found: " + methodName);
+            }
+
+            Object result = method.invoke(cityInfo, parameters);
+            return new Message("CityInfoServer", result.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Message("CityInfoServer", "Error: " + e.getMessage());
         }
+    }
+
+    private Object convertToType(String param, Class<?> targetType) {
+        if(targetType == String.class) {
+            return param;
+        } else if(targetType == Integer.class || targetType == int.class) {
+            return Integer.parseInt(param);
+        } else if(targetType == Float.class || targetType == float.class) {
+            return Float.parseFloat(param);
+        }
+
+        return null;
     }
 }
 

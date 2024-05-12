@@ -1,4 +1,4 @@
-package infoapp;
+package cityinfoapp;
 
 public class CityInfoImpl implements CityInfo {
     @Override
@@ -7,7 +7,7 @@ public class CityInfoImpl implements CityInfo {
     }
 
     @Override
-    public float getTemperature(String city) {
-        return 28.0f;
+    public String getTemperature(String city) {
+        return "28.0";
     }
 }

@@ -7,6 +7,9 @@ import registry.TypesRegistry;
 import requestreply.ByteStreamTransformer;
 import requestreply.Replyer;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+
 class DispatcherTransformer implements ByteStreamTransformer
 {
     private MessageDispatcher originalServer;

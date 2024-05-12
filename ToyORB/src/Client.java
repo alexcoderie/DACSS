@@ -1,4 +1,5 @@
-import mathapp.MathOperation;
+import cityinfoapp.CityInfo;
+import mathoperationapp.MathOperation;
 import toyORB.ToyORB;
 
 public class Client {
@@ -8,7 +9,7 @@ public class Client {
 //        System.out.println("Information is " + roadInfo);
 
         MathOperation mathOperation = (MathOperation) ToyORB.getObjectReference("MathServer");
-        float result = mathOperation.doAdd(10f, 14f);
+        String result = mathOperation.doAdd(10f, 14f);
         System.out.println("Result is " + result);
     }
 }

@@ -1,6 +1,6 @@
-package infoapp;
+package cityinfoapp;
 
 public interface CityInfo {
     String getRoadInfo(int roadID);
-    float getTemperature(String city);
+    String getTemperature(String city);
 }

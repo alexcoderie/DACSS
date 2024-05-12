@@ -3,6 +3,7 @@ package toyORB;
 import commons.Address;
 import messagemarshaller.Marshaller;
 import messagemarshaller.Message;
+import proxygenerator.ProxyGenerator;
 import registry.Entry;
 import requestreply.Requestor;
 
@@ -30,6 +31,7 @@ public class ToyORB {
 
             System.out.println("Received message: " + answer.data + " from " + answer.sender);
 
+            ProxyGenerator.generateServerProxySource(object.getClass().getInterfaces()[0], port);
             String proxyClassName = "serverproxies." + interfaceName + "ServerSideProxy";
 
             try{
@@ -44,6 +46,7 @@ public class ToyORB {
                 e.printStackTrace();
             }
         }
+
     }
 
     public static <T> T getObjectReference(String name) {
@@ -60,12 +63,15 @@ public class ToyORB {
         String serverIP = parts[0];
         int port = Integer.parseInt(parts[1]);
         String objectType = parts[2];
+        System.out.println(objectType);
 
         Entry serverAddress = new Entry(serverIP, port);
 
-        Class<?> proxyClass = null;
+        Class<?> proxyInterface = null;
         try {
-            proxyClass = Class.forName("clientproxies." + objectType + "ClientSideProxy");
+            proxyInterface = Class.forName(objectType.toLowerCase() + "app." + objectType);
+            ProxyGenerator.generateClientProxySource(proxyInterface);
+            Class<?> proxyClass = Class.forName("clientproxies." + objectType + "ClientSideProxy");
             Constructor<?> constructor = proxyClass.getConstructor(Address.class);
 
             return (T) constructor.newInstance(serverAddress);

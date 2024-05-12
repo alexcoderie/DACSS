@@ -1,45 +1,40 @@
 package clientproxies;
 
 import commons.Address;
-import infoapp.CityInfo;
 import messagemarshaller.Marshaller;
 import messagemarshaller.Message;
 import requestreply.Requestor;
 
-import java.net.spi.InetAddressResolver;
-
+import cityinfoapp.CityInfo;
 public class CityInfoClientSideProxy implements CityInfo {
-    private Address serverAddress;
+	private Address serverAddress;
 
-    public CityInfoClientSideProxy(Address serverAddress) {
-        this.serverAddress = serverAddress;
-    }
+	public CityInfoClientSideProxy(Address serverAddress) {
+		this.serverAddress = serverAddress;
+	}
 
-    public String sendRequest(String request) {
-        Requestor r = new Requestor("CityInfoClient");
-        Marshaller m = new Marshaller();
+	public String sendRequest(String request) {
+		Requestor r = new Requestor("CityInfoClient");
+		Marshaller m = new Marshaller();
 
-        Message msg = new Message("CityInfoClient", request);
-        byte[] bytes = m.marshal(msg);
-        bytes = r.deliver_and_wait_feedback(serverAddress, bytes);
-        Message answer = m.unmarshal(bytes);
+		Message msg = new Message("CityInfoClient", request);
+		byte[] bytes = m.marshal(msg);
+		bytes = r.deliver_and_wait_feedback(serverAddress, bytes);
+		Message answer = m.unmarshal(bytes);
 
-        return answer.data;
-    }
-    @Override
-    public String getRoadInfo(int roadID) {
+		return answer.data;
+	}	@Override
+	public String getRoadInfo(int param0) {
+		String message = "getRoadInfo:" + param0;
+		String answer = sendRequest(message);
+		return answer;
+	}
 
-        String message = "get_road_info:" + roadID;
-        String answer = sendRequest(message);
+	@Override
+	public String getTemperature(String param0) {
+		String message = "getTemperature:" + param0;
+		String answer = sendRequest(message);
+		return answer;
+	}
 
-        return answer;
-    }
-
-    @Override
-    public float getTemperature(String city) {
-        String message = "get_temp:" + city;
-        String answer = sendRequest(message);
-
-        return Float.parseFloat(answer);
-    }
 }
